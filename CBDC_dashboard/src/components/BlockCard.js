@@ -5,6 +5,9 @@ import ReactLoading from 'react-loading';
 
 import { dbService } from "../fbase";
 import GetBlockNum from "../_helpers/GetBlockNum";
+import ContentWrapper from "../layout/ContentWrapper";
+import Base from "../layout/Base";
+import Header from "../layout/Header";
 const Card = (props) =>{
     return (
         <div>
@@ -30,6 +33,7 @@ const Card = (props) =>{
     )
 }
 
+// request from DB every second
 const initialState = { count: 0, step: 1, }; 
 function reducer(state, action) { const { count, step } = state; if (action.type === 'tick') { return { count: count + step, step }; } else if (action.type === 'step') { return { count, step: action.step }; } else { throw new Error(); } }
 
@@ -91,6 +95,8 @@ const BlockCard = ({name}) =>{
         }
     }
 
+
+    // get block num from db
     const setBlockNum = async() => {
         await fetch('http://localhost:3030/v1/blocknum')
             .then(response => response.text())
@@ -138,29 +144,30 @@ const BlockCard = ({name}) =>{
     //     }        
     // ]
     return(
-        <div class="card">
-            
-            <div class="card-header">
-                <img src={"/images/"+name+".png"} style={{height : 20, width : 20}} alt="img"/>
-                <h1 class="card-header-title">{name}</h1>
-                <div>
-                    <div class="center">
-                        <ReactLoading type={"cubes"} color={"#e7eaf3"}/>
+        <>
+            <div class="card">
+                <div class="card-header">
+                    <img src={"/images/"+name+".png"} style={{height : 20, width : 20}} alt="img"/>
+                    <h1 class="card-header-title">{name}</h1>
+                    <div>
+                        <div class="center">
+                            <ReactLoading type={"cubes"} color={"#e7eaf3"}/>
+                        </div>
+
+                        <span>current blocknum : {curBlocknum.blocknum} </span>
+                        {/* <CountUp start={0} end={100000} delay={0} duration={100000} prefix={"current block num : "} /> */}
                     </div>
-
-                    <span>current blocknum : {curBlocknum.blocknum} </span>
-                    {/* <CountUp start={0} end={100000} delay={0} duration={100000} prefix={"current block num : "} /> */}
                 </div>
-            </div>
 
-            <div class="card-container">
-                {
-                    blockTxHistory.map((el,i)=>(
-                        <Card unit={name} from={el.sender_wallet} to={el.receiver_wallet} amount={el.amount} blocknum={el.blocknum}></Card> 
-                    ))
-                }
-            </div>            
-        </div>
+                <div class="card-container">
+                    {
+                        blockTxHistory.map((el,i)=>(
+                            <Card unit={name} from={el.sender_wallet} to={el.receiver_wallet} amount={el.amount} blocknum={el.blocknum}></Card> 
+                        ))
+                    }
+                </div>            
+            </div>
+            </>
     )
 }
 
