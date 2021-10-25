@@ -17,6 +17,7 @@
     "react-loading": "^2.0.3",
     "react-redux": "^7.2.5",
     "react-scripts": "4.0.3",
+    "react-smooth-list": "^1.0.2",
     "react-split-pane": "^0.1.92",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.3.3",

@@ -1,13 +1,9 @@
 import React, { useState,useEffect, useReducer } from "react";
 import "./BlockCard.css";
-import CountUp from 'react-countup';
+import SmoothList from 'react-smooth-list';
 import ReactLoading from 'react-loading';
 
 import { dbService } from "../fbase";
-import GetBlockNum from "../_helpers/GetBlockNum";
-import ContentWrapper from "../layout/ContentWrapper";
-import Base from "../layout/Base";
-import Header from "../layout/Header";
 const Card = (props) =>{
     return (
         <div>
@@ -59,18 +55,6 @@ const BlockCard = ({name}) =>{
             console.log(error)
         }
     }
-    const updateCurBlocknum = async(e) => {
-        try {
-            await dbService
-                .collection(`CrossBlockInfo`)
-                .doc("cosmos")
-                .update({blocknum: con})
-            
-        } catch(error) {
-            console.log(error)
-        }
-    }
-
     const getBlockTxHistory = async(e) => {
         try {
             var blockTxSnapshot = await dbService
@@ -95,54 +79,15 @@ const BlockCard = ({name}) =>{
         }
     }
 
-
-    // get block num from db
-    const setBlockNum = async() => {
-        await fetch('http://localhost:3030/v1/blocknum')
-            .then(response => response.text())
-            .then((response)=> {
-                var i_res = parseInt(response)
-                //setCosmosBlockNum(i_res)
-                con = i_res;
-                updateCurBlocknum()
-            })
-            .catch((error) => console.log(error))
-        
-    }
-
     useEffect(()=> {
         const id = setInterval(()=>{
             dispatch({type:'tick'});
-            // setBlockNum()
             getBlockTxHistory()
             getCurBlocknum()
-        },2000)
-
-
-
+        },1000)
         return ()=>clearInterval(id)
     }, [dispatch])
 
-    // const SampleTX=[
-    //     {
-    //         blocknum : 100,
-    //         from:"0xccbb51966fa305811fd",
-    //         to:"0x0ff4df77f15e7eaaaad13",
-    //         amount: 100
-    //     },
-    //     {
-    //         blocknum : 162,
-    //         from:"0xccbb51966fa305811fd",
-    //         to:"0x0ff4df77f15e7eaaaad13",
-    //         amount: 100
-    //     },
-    //     {
-    //         blocknum : 886,
-    //         from:"0xccbb51966fa305811fd",
-    //         to:"0x0ff4df77f15e7eaaaad13",
-    //         amount: 100
-    //     }        
-    // ]
     return(
         <>
             <div class="card">
@@ -154,18 +99,23 @@ const BlockCard = ({name}) =>{
                             <ReactLoading type={"cubes"} color={"#e7eaf3"}/>
                         </div>
 
-                        <span>current blocknum : {curBlocknum.blocknum} </span>
-                        {/* <CountUp start={0} end={100000} delay={0} duration={100000} prefix={"current block num : "} /> */}
+                        <span>current blocknum : {curBlocknum ? curBlocknum.blocknum : 1} </span>
                     </div>
                 </div>
 
-                <div class="card-container">
-                    {
-                        blockTxHistory.map((el,i)=>(
-                            <Card unit={name} from={el.sender_wallet} to={el.receiver_wallet} amount={el.amount} blocknum={el.blocknum}></Card> 
-                        ))
-                    }
-                </div>            
+
+                    <div class="card-container">
+                        {
+                            blockTxHistory.map((el,i)=>(
+                                <SmoothList>
+                                    <Card unit={name} from={el.sender_wallet} to={el.receiver_wallet} amount={el.amount} blocknum={el.blocknum}></Card> 
+                                </SmoothList>
+                                
+                            ))
+                        }
+                    </div>
+                
+                            
             </div>
             </>
     )
