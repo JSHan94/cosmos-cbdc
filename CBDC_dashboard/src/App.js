@@ -9,9 +9,10 @@ function App() {
     <>
     <Header/>
       <SplitPane split="vertical" defaultSize="33%">
-          <BlockCard name={"Klaytn"}></BlockCard>
+        <BlockCard name={"Cosmos"}></BlockCard>
+          
           <SplitPane split="vertical" defaultSize="50%">
-            <BlockCard name={"Cosmos"}></BlockCard>
+            <BlockCard name={"Klaytn"}></BlockCard>  
             <BlockCard name={"LINE"}></BlockCard>
           </SplitPane>
       </SplitPane>

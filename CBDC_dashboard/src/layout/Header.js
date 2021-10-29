@@ -1,7 +1,7 @@
 import React, { useState,useEffect, useReducer } from 'react'
-import styled from 'styled-components';
 import { dbService } from '../fbase';
-import CountUp from 'react-countup';
+import {useDispatch,useSelector} from 'react-redux'
+
 
 function makeAddress(length) {
     var result           = '0x';
@@ -19,99 +19,83 @@ function reducer(state, action) { const { count, step } = state; if (action.type
 
 // Dummy Tx Generator
 const Header = ()=>{
-    const [klaytnNum, setKlaytnNum] = useState(1)
-    const [cosmosNum, setCosmosNum] = useState(1)
-    const [lineNum, setLineNum] = useState(1)
+    //const [blocknum, setBlocknum] = useState(1)
     const [state,dispatch] = useReducer(reducer,initialState)
+    const blocknum= useSelector((state)=>state);
+    const reduxDispatch = useDispatch()
+    
+    
     // automatically countup
-    const setDummyBlocknum = async(name)=>{
+    const setDummyBlocknum = async()=>{
         try {
-            await dbService
-                .collection(`CrossBlockInfo`)
-                .doc(name.toLowerCase())
-                .set({blocknum:klaytnNum})
+            const chain_names = ['cosmos','klaytn','line']
+            chain_names.forEach(e =>{
+                dbService
+                    .collection(`CrossBlockInfo`)
+                    .doc(e)
+                    .set({blocknum:blocknum})
+            })
+            
         }catch(error){
             console.log(error)
         }
         
     }
-    // // get cur blocknum from DB
-    // const getCurBlocknum = async(name) =>{
-    //     try{
-    //         const data =await dbService
-    //             .collection(`CrossBlockInfo`)
-    //             .doc(name.toLowerCase())
-    //             .get().then(snapshot =>{
-    //                 if (name == 'klaytn'){
-    //                     setKlaytnNum(snapshot.data()['blocknum'])
-    //                 }else if (name == 'cosmos'){
-    //                     setCosmosNum(snapshot.data()['blocknum'])
-    //                 }else if (name == 'line'){
-    //                     setLineNum(snapshot.data()['blocknum'])
-    //                 }
-    //              } )                         
-    //     } catch(error){
-    //         console.log(error)
-    //     }
-    //}
 
     const onClickTitle = async()=>{
-        //Generate Dummy Tx List
-        var sender_address = makeAddress(30)
-        var relayer_address = makeAddress(30)
-        var receiver_address = makeAddress(30)
-        var amount = Math.floor(Math.random() * (1000 - 100)) + 100
 
+        //Generate Dummy Tx List
+        var amount = Math.floor(Math.random() * (1000 - 100)) + 100
         try{
             
-            var KlaytnToCosmos = {
+            var CosmosTX = {
                 ['amount'] : amount,
-                ['receiver_wallet'] : relayer_address,
-                ['sender_wallet'] : sender_address
+                ['receiver_wallet'] : makeAddress(30),
+                ['sender_wallet'] : makeAddress(30),
+                ['blocknum'] : blocknum,
+                ['chain_name'] : 'cosmos'
             }
-            var CosmosToLine = {
+
+            var KlaytnTX = {
                 ['amount'] : amount,
-                ['receiver_wallet'] : receiver_address,
-                ['sender_wallet'] : relayer_address
+                ['receiver_wallet'] : makeAddress(30),
+                ['sender_wallet'] : makeAddress(30),
+                ['blocknum'] : blocknum,
+                ['chain_name'] : 'klaytn'
+            }
+            
+            var LineTX = {
+                ['amount'] : amount,
+                ['receiver_wallet'] : makeAddress(30),
+                ['sender_wallet'] : makeAddress(30),
+                ['blocknum'] : blocknum,
+                ['chain_name'] : 'line'
             }
 
             // klaytn -> cosmos
             await dbService
                 .collection(`CrossTxInfo`)
                 .add({
-                    ...KlaytnToCosmos,
-                    ['blocknum'] : klaytnNum,
-                    ['chain_name'] : 'klaytn'
+                    ...KlaytnTX
                 })
             
             await dbService
                 .collection(`CrossTxInfo`)
                 .add({
-                    ...KlaytnToCosmos,
-                    ['blocknum'] : cosmosNum,
-                    ['chain_name'] : 'cosmos'
-                })
-            
-            // cosmos -> line
-            await dbService
-                .collection(`CrossTxInfo`)
-                .add({
-                    ...CosmosToLine,
-                    ['blocknum'] : cosmosNum,
-                    ['chain_name'] : 'cosmos'
+                    ...CosmosTX
                 })
             await dbService
                 .collection(`CrossTxInfo`)
                 .add({
-                    ...CosmosToLine,
-                    ['blocknum'] : lineNum,
-                    ['chain_name'] : 'line'
+                    ...LineTX
                 })
 
         } catch (error) {
             console.log(error)
         }
+        
     }
+    // refresh db
     const onClickExplain = async()=>{
         try{
             const ref1 = await dbService.collection('CrossBlockInfo')
@@ -126,38 +110,31 @@ const Header = ()=>{
             ref2.onSnapshot((snapshot) => {
                 snapshot.docs.forEach((doc) => {
                   ref2.doc(doc.id).delete()
+                  window.location.reload();
                 })
               })
-            
         }catch (error) {
             console.log(error)
         }
     }
 
-    useEffect(()=> {
-        
-        const id = setInterval(()=>{
-            console.log(klaytnNum)
-            setKlaytnNum(parseInt(klaytnNum)+1)
-            setCosmosNum(parseInt(klaytnNum)+1)
-            setLineNum(parseInt(klaytnNum)+1)
-            dispatch({type:'tick'})
-            setDummyBlocknum('klaytn')
-            setDummyBlocknum('cosmos')
-            setDummyBlocknum('line')
 
-            // setKlaytnNum(getCurBlocknum('klaytn'))
-            // setCosmosNum(getCurBlocknum('cosmos'))
-            // setLineNum(getCurBlocknum('line'))
+    useEffect(()=> {
+        const id = setInterval(()=>{
+            //setBlocknum(parseInt(blocknum)+1)
+            
+            reduxDispatch({type:'add'})
+            dispatch({type:'tick'})
+            setDummyBlocknum() 
         },1000)
         return ()=>clearInterval(id)
-    }, [dispatch,klaytnNum])
+    }, [dispatch,blocknum])
 
     return(
         <header className="topnavbar-wrapper">
             <div className="w-100">
                 <h1 style={{margin : 10, cursor: 'pointer'}} onClick={onClickTitle}>Cross-Border Dashboard</h1>
-                <h2 style={{cursor: 'pointer'}} onClick={onClickExplain}>Klaytn &rarr; Cosmos &rarr; Line</h2>
+                <h2 style={{cursor: 'pointer'}} onClick={onClickExplain}> Cosmos(KRW-C) &rarr; Klaytn(USD-C) &rarr; Line(THB-C)</h2>
             </div>
         </header>
     )
