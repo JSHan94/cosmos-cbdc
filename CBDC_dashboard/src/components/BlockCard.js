@@ -5,17 +5,52 @@ import ReactLoading from 'react-loading';
 
 import { dbService } from "../fbase";
 const CardHeader = (props)=>{
-
+    var explain;
+    var sender;
+    var receiver;
+    var title;
+    switch (props.name.toLowerCase()){
+        case "cosmos":
+            title="하나은행 노드"
+            break;
+        case "klaytn":
+            title="기축통화 은행 노드"
+            break;
+        case "line":
+            title="방콕은행 노드"
+            break;
+    }
+    if (props.txs.length >0 ){
+        switch (props.name.toLowerCase()){
+            case "cosmos":
+                explain="송금 신청 트랜잭션 (KRW-C 송금)"
+                break
+            case "klaytn":
+                explain="기축통화 내 송금 트랜잭션 (USD-C 송금)"
+                break;
+            case "line":
+                explain="수취 트랜잭션 (THB-C 송금)"
+                break;
+            default:
+                explain = "None explain"
+        }
+        sender = props.txs[0].sender_wallet;
+        receiver = props.txs[0].receiver_wallet; 
+    }
     //ToDo (설명 추가)
     return(
         <>
             <img src={"/images/"+props.name+".png"} style={{height : 20, width : 20}} alt="img"/>
-            <h1 class="card-header-title">{props.name}</h1>
+            <h1 class="card-header-title">{title}</h1>
             <div>
                 <div class="center">
                     <ReactLoading type={"cubes"} color={"#e7eaf3"}/>
                 </div>
                 <span>current blocknum : {props.blocknum ? props.blocknum : 1} </span>
+                <h3>{explain}</h3>
+                {
+                    sender ? <h6> {sender} &rarr; {receiver}</h6> : <></>
+                }
             </div>
         </>
     )
@@ -66,7 +101,7 @@ const BlockCard = ({name}) =>{
             await dbService
                 .collection(`CrossBlockInfo`)
                 .doc(name.toLowerCase())
-                .get().then(snapshot=>setCurBlocknum(snapshot.data()))
+                .get().then(snapshot=>setCurBlocknum(snapshot.data().blocknum))
             
         } catch(error){
             console.log(error)
@@ -109,7 +144,7 @@ const BlockCard = ({name}) =>{
         <>
             <div class="card">
                 <div class="card-header">
-                    <CardHeader name={name} blocknum={curBlocknum}></CardHeader>
+                    <CardHeader name={name} blocknum={curBlocknum} txs={blockTxHistory}></CardHeader>
                     {/* <img src={"/images/"+name+".png"} style={{height : 20, width : 20}} alt="img"/>
                     <h1 class="card-header-title">{name}</h1>
                     <div>

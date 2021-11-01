@@ -133,7 +133,7 @@ const Header = ()=>{
     return(
         <header className="topnavbar-wrapper">
             <div className="w-100">
-                <h1 style={{margin : 10, cursor: 'pointer'}} onClick={onClickTitle}>Cross-Border Dashboard</h1>
+                <h1 style={{margin : 10, cursor: 'pointer'}} onClick={onClickTitle}>해외 송금 대시보드</h1>
                 <h2 style={{cursor: 'pointer'}} onClick={onClickExplain}> Cosmos(KRW-C) &rarr; Klaytn(USD-C) &rarr; Line(THB-C)</h2>
             </div>
         </header>
