@@ -23,9 +23,9 @@ const Header = ()=>{
     const [state,dispatch] = useReducer(reducer,initialState)
     const blocknum= useSelector((state)=>state);
     const reduxDispatch = useDispatch()
+ 
     
-    
-    // automatically countup
+    // automatically countup (for dummy test)
     const setDummyBlocknum = async()=>{
         try {
             const chain_names = ['cosmos','klaytn','line']
@@ -39,7 +39,6 @@ const Header = ()=>{
         }catch(error){
             console.log(error)
         }
-        
     }
 
     const onClickTitle = async()=>{
@@ -119,16 +118,16 @@ const Header = ()=>{
     }
 
 
-    useEffect(()=> {
-        const id = setInterval(()=>{
-            //setBlocknum(parseInt(blocknum)+1)
+    // useEffect(()=> {
+    //     const id = setInterval(()=>{
+    //         //setBlocknum(parseInt(blocknum)+1)
             
-            reduxDispatch({type:'add'})
-            dispatch({type:'tick'})
-            setDummyBlocknum() 
-        },1000)
-        return ()=>clearInterval(id)
-    }, [dispatch,blocknum])
+    //         reduxDispatch({type:'add'})
+    //         dispatch({type:'tick'})
+    //         setDummyBlocknum() 
+    //     },3000)
+    //     return ()=>clearInterval(id)
+    // }, [dispatch,blocknum])
 
     return(
         <header className="topnavbar-wrapper">

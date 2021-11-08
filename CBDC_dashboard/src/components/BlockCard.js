@@ -56,28 +56,52 @@ const CardHeader = (props)=>{
     )
 }
 const Card = (props) =>{
-    return (
-        <div style={{color : props.color}}>
-            <hr class="hr-space"></hr>
-            <div class="row">
-                <div class="col-sm-4">Blocknum :</div>
-                <div class="col-sm-8">{props.blocknum}</div>
+    if (props.unit.toLowerCase() ==="klaytn" && props.idx < 3){
+        return (
+            <div style={{color : "red"}}>
+                <hr class="hr-space"></hr>
+                <div class="row">
+                    <div class="col-sm-4">Blocknum :</div>
+                    <div class="col-sm-8">{props.blocknum}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">From :</div>
+                    <div class="col-sm-8">{props.from}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">To :</div>
+                    <div class="col-sm-8">{props.to}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">Amount :</div>
+                    <div class="col-sm-8">{props.amount} {props.unit}</div>
+                </div>
+                
             </div>
-            <div class="row">
-                <div class="col-sm-4">From :</div>
-                <div class="col-sm-8">{props.from}</div>
+        )
+    }else{
+        return (
+            <div style={{color : props.color}}>
+                <hr class="hr-space"></hr>
+                <div class="row">
+                    <div class="col-sm-4">Blocknum :</div>
+                    <div class="col-sm-8">{props.blocknum}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">From :</div>
+                    <div class="col-sm-8">{props.from}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">To :</div>
+                    <div class="col-sm-8">{props.to}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">Amount :</div>
+                    <div class="col-sm-8">{props.amount} {props.unit}</div>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-sm-4">To :</div>
-                <div class="col-sm-8">{props.to}</div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">Amount :</div>
-                <div class="col-sm-8">{props.amount} {props.unit}</div>
-            </div>
-            
-        </div>
-    )
+        )
+    }
 }
 
 // request from DB every second
@@ -91,7 +115,6 @@ const BlockCard = ({name}) =>{
 
     const [blockTxHistory, setBlockTxHistory] = useState([])
     const [curBlocknum, setCurBlocknum] =useState([])
-    const [cosmosBlocknum, setCosmosBlockNum] = useState(0)
 
     var con;
 
@@ -101,7 +124,10 @@ const BlockCard = ({name}) =>{
             await dbService
                 .collection(`CrossBlockInfo`)
                 .doc(name.toLowerCase())
-                .get().then(snapshot=>setCurBlocknum(snapshot.data().blocknum))
+                .onSnapshot(doc=>setCurBlocknum(doc.data().blocknum))
+                // .get().then(snapshot=>{
+                //     setCurBlocknum(snapshot.data().blocknum)
+                // })
             
         } catch(error){
             console.log(error)
@@ -109,36 +135,43 @@ const BlockCard = ({name}) =>{
     }
     const getBlockTxHistory = async(e) => {
         try {
-            var blockTxSnapshot = await dbService
+            await dbService
                 .collection(`CrossTxInfo`)
                 .where("chain_name", "==", name.toLowerCase())
-                .get()
+                .onSnapshot(blockTxSnapshot=>{
+                    const txsArray = blockTxSnapshot.docs.map((doc)=>({
+                        ...doc.data()
+                    })).sort(function(a,b) {
+                        if(a.blocknum > b.blocknum){
+                            return -1;
+                        }
+                        if(a.blocknum < b.blocknum){
+                            return 1;
+                        }
+                        return 0;
+                    })
+                    setBlockTxHistory(txsArray.filter(tx => tx.chain_name === name.toLowerCase()))
+                })
             
-            const txsArray = blockTxSnapshot.docs.map((doc)=>({
-                ...doc.data()
-            })).sort(function(a,b) {
-                if(a.blocknum > b.blocknum){
-                    return -1;
-                }
-                if(a.blocknum < b.blocknum){
-                    return 1;
-                }
-                return 0;
-            })
-            setBlockTxHistory(txsArray.filter(tx => tx.chain_name === name.toLowerCase()))
         } catch(error) {
             console.log(error)
         }
     }
 
-    useEffect(()=> {
-        const id = setInterval(()=>{
-            dispatch({type:'tick'});
-            getBlockTxHistory()
-            getCurBlocknum()
-        },1000)
-        return ()=>clearInterval(id)
-    }, [dispatch])
+    // useEffect(()=> {
+    //     const id = setInterval(()=>{
+    //         dispatch({type:'tick'});
+    //         getBlockTxHistory()
+    //         getCurBlocknum()
+    //     },1000)
+    //     return ()=>clearInterval(id)
+    // }, [dispatch])
+
+    // useEffect(()=>{
+    //     dispatch({type:'tick'});
+    //     getBlockTxHistory()
+    //     getCurBlocknum()
+    // },[])
 
     return(
         <>
