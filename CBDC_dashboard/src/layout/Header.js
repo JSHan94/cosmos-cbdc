@@ -100,7 +100,10 @@ const Header = ()=>{
             const ref1 = await dbService.collection('CrossBlockInfo')
             ref1.onSnapshot((snapshot) => {
                 snapshot.docs.forEach((doc) => {
-                  ref1.doc(doc.id).delete()
+                  ref1.doc(doc.id).update({
+                      blocknum:1
+                  })
+                  window.location.reload();
                 })
               })
             

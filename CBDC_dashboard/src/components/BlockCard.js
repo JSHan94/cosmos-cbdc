@@ -157,21 +157,10 @@ const BlockCard = ({name}) =>{
             console.log(error)
         }
     }
-
-    // useEffect(()=> {
-    //     const id = setInterval(()=>{
-    //         dispatch({type:'tick'});
-    //         getBlockTxHistory()
-    //         getCurBlocknum()
-    //     },1000)
-    //     return ()=>clearInterval(id)
-    // }, [dispatch])
-
-    // useEffect(()=>{
-    //     dispatch({type:'tick'});
-    //     getBlockTxHistory()
-    //     getCurBlocknum()
-    // },[])
+    useEffect(()=>{
+        getCurBlocknum()
+        getBlockTxHistory()
+    },[])
 
     return(
         <>
