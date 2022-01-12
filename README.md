@@ -23,8 +23,8 @@ CBDC demo project made by cosmos-sdk
    - [x] Klaytn과 LINE 블록체인과 Cosmos 블록체인 간의 정보 교환 기능 추가
    - [x] Dashboard와 블록체인간의 연동, Dashboard 좀 더 시각화
    - [x] 해외송금 UI 디자인 구현
-   - [ ] Dashboard와 Server의 DB 이용 최적화 - `현재 작업중`
-   - [ ] 2차 PoC 데모 준비 - `현재 작업중`
+   - [x] Dashboard와 Server의 DB 이용 최적화 - `현재 작업중`
+   - [x] 2차 PoC 데모 준비 - `현재 작업중`
 
 ## Build Environment
 - node: 14.17.5
@@ -36,19 +36,33 @@ CBDC demo project made by cosmos-sdk
 
 # 파일 설명
 
-CBDC_server :  코스모스 블록체인에 쿼리를 보낼 서버
+## CBDC_server 
+  
+코스모스 블록체인에 쿼리를 보낼 서버
 
-CBDC_blockserver : Dashboard와 블록체인의 blockNumber를 동기화하기 위한 서버
+## CBDC_blockserver
 
-CBDC_admin : 은행 관리 시나리오 데모
+Dashboard와 블록체인의 blockNumber를 동기화하기 위한 서버
 
-CBDC_user : 유저 서비스 데모, 현재 크롬창 최적화 사이즈: `516 * 992`(viewport)
+## CBDC_admin
 
-CBDC_receiver: 해외송금 수취은행 데모
+은행 관리 시나리오 데모
 
-CBDC_dashboard: 해외송금 Blockchain의 transaction 상황을 보기 위한 대시보드
+## CBDC_user
 
-dpnmd : CBDC 코스모스 블록체인
+유저 서비스 데모, 현재 크롬창 최적화 사이즈: `516 * 992`(viewport)
+
+## CBDC_receiver
+
+해외송금 수취은행 데모
+
+## CBDC_dashboard
+
+해외송금 Blockchain의 transaction 상황을 보기 위한 대시보드
+
+## dpnmd
+
+CBDC 코스모스 블록체인
 
 # 실행 방법
 
