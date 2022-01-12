@@ -39,7 +39,8 @@ CBDC demo project made by cosmos-sdk
 ## CBDC_server 
 
 <p>
-   Cosmos 블록체인과 CBDC a
+   Cosmos 블록체인과 하나금융 application과 연동하기 위한 Backend 서버. 은행 이벤트 중 블록체인 트랜잭션이 호출되면 해당 서버로 요청을 보냄. 그 후 트랜잭션 생성 CLI를 대신하여 실행 시켜줌. 현재 이더리움의 Web3 API 같은 것을 Cosmos에서는 지원하지 않는 것으로 보여서 다음과 같이 구현하였음. 세부적인 실행 과정은 주석과 shell script를 참고할 것을 권장함.
+   
 </p>
 
 ## CBDC_blockserver
@@ -51,9 +52,6 @@ CBDC demo project made by cosmos-sdk
    - [Klaytn](https://github.com/klaytn/klaytn)
    - [LFB](https://github.com/line/lfb)
 </p>
-
-- ㅇㅇ
-   -
 
 ## CBDC_admin
 
@@ -68,6 +66,18 @@ CBDC demo project made by cosmos-sdk
    - 중앙 은행 CBDC 발행 및 배정 기능
    
 ## CBDC_user
+
+은행 어플리케이션 사용 데모 프로그램 frontend 구현. 현재 제공되는 기능에 대한 설명은 데모 영상을 참고할 것을 권장 드림.
+
+- 개인 고객 페이지
+   - PersonalPage 폴더 내 각 페이지 구현
+   - CBDC 결제, 발행, 교환 시나리오 구현
+   - 거래 기록 확인 기능
+   - 역외 결제 시나리오 구현
+- 상점 고객 페이지
+   - AffilatePage 폴더 내 각 페이지 구현
+   - 개인 고객 결제 내역 확인 시나리오 구현
+   - 거래 기록 확인 기능
 
 유저 서비스 데모, 현재 크롬창 최적화 사이즈: `516 * 992`(viewport)
 
