@@ -40,7 +40,6 @@ CBDC demo project made by cosmos-sdk
 
 <p>
    Cosmos 블록체인과 하나금융 application과 연동하기 위한 Backend 서버. 은행 이벤트 중 블록체인 트랜잭션이 호출되면 해당 서버로 요청을 보냄. 그 후 트랜잭션 생성 CLI를 대신하여 실행 시켜줌. 현재 이더리움의 Web3 API 같은 것을 Cosmos에서는 지원하지 않는 것으로 보여서 다음과 같이 구현하였음. 세부적인 실행 과정은 주석과 shell script를 참고할 것을 권장함.
-   
 </p>
 
 ## CBDC_blockserver
@@ -52,6 +51,11 @@ CBDC demo project made by cosmos-sdk
    - [Klaytn](https://github.com/klaytn/klaytn)
    - [LFB](https://github.com/line/lfb)
 </p>
+
+## CBDC_dashboard
+
+해외송금 Blockchain의 transaction 상황을 보기 위한 대시보드. 연동된 블록체인들에서 트랜잭션 정보를 가져와 분석한 다음 dashboard에 등록함.
+
 
 ## CBDC_admin
 
@@ -67,8 +71,12 @@ CBDC demo project made by cosmos-sdk
    
 ## CBDC_user
 
-은행 어플리케이션 사용 데모 프로그램 frontend 구현. 현재 제공되는 기능에 대한 설명은 데모 영상을 참고할 것을 권장 드림.
+은행 어플리케이션 사용 데모 프로그램 구현. 현재 제공되는 기능에 대한 설명은 데모 영상을 참고할 것을 권장 드림. 현재 크롬창 최적화 사이즈: `516 * 992`(viewport)
 
+- 활용 프레임워크
+   - Frontend : ReactJS
+   - Backend : NodeJS
+   - Database : Firebase 
 - 개인 고객 페이지
    - PersonalPage 폴더 내 각 페이지 구현
    - CBDC 결제, 발행, 교환 시나리오 구현
@@ -79,19 +87,18 @@ CBDC demo project made by cosmos-sdk
    - 개인 고객 결제 내역 확인 시나리오 구현
    - 거래 기록 확인 기능
 
-유저 서비스 데모, 현재 크롬창 최적화 사이즈: `516 * 992`(viewport)
 
 ## CBDC_receiver
 
-해외송금 수취은행 데모
+해외송금 수취 은행 데모 시현을 위한 프로그램.
 
-## CBDC_dashboard
-
-해외송금 Blockchain의 transaction 상황을 보기 위한 대시보드
+- 해외 송금 정보 확인 페이지
+   - OverseasInfoPage.js
+   - 해외 송금이 완료된 후 트랜잭션의 기록을 확인할 수 있음
 
 ## dpnmd
 
-CBDC 코스모스 블록체인
+CBDC 코스모스 블록체인. 관련 실행 방법은 Cosmos SDK [공식 Docs](https://docs.cosmos.network/)를 참고하는 것을 권장함.
 
 # 실행 방법
 
@@ -99,13 +106,10 @@ CBDC 코스모스 블록체인
 
 디폴트 포트 설정은 다음과 같다.
 
-Admin port : 3001 
-
-User port : 3000
-
-Receiver port: 3002
-
-Server port : 3030
+- Admin port : 3001 
+- User port : 3000
+- Receiver port: 3002
+- Server port : 3030
 
 
 ## shell 2 - 블록체인 실행
@@ -114,9 +118,7 @@ Server port : 3030
 starport serve
 ``` 
 
-만약 블록이 생성 되지 않는 다면 다른 shell에서 아래와 같은 명령어 실행 시 블록이 생성됨 (에러 메시지가 Trigger 역할을 하는 듯함..)
-
-dpnm은 cosmos-SDK chain 생성 시 초기 세팅한 이름임. 자유롭게 변경가능함
+만약 블록이 생성 되지 않는 다면 다른 shell에서 아래와 같은 명령어 실행 시 블록이 생성됨 (에러 메시지가 Trigger 역할을 하는 듯함..). dpnm은 cosmos-SDK chain 생성 시 초기 세팅한 이름임. 자유롭게 변경가능함
 
 ```
 dpnmd start
