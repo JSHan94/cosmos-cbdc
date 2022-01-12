@@ -37,17 +37,36 @@ CBDC demo project made by cosmos-sdk
 # 파일 설명
 
 ## CBDC_server 
-  
-코스모스 블록체인에 쿼리를 보낼 서버
+
+<p>
+   Cosmos 블록체인과 CBDC a
+</p>
 
 ## CBDC_blockserver
 
-Dashboard와 블록체인의 blockNumber를 동기화하기 위한 서버
+<p>
+   CBDC 해외송금 Dashboard에서 블록체인의 blockNumber와 트랜잭션 정보를 동기화하기 위한 Backend 서버. 본 시스템은 세 가지 블록체인을 사용하는 시나리오를 가정하였으며 각각 Cosmos, Line Financial Blockchain (LFB), Kakao Klaytn이 해당 됨. 현재 세 블록체인 간의 표준화 된 프로토콜이 존재하지 않아 각각의 트랜잭션 정보를 수집하여 하나의 Dashboard를 통해 보여주도록 구현되었음. 본 소스코드 내에는 cosmos blockchain 클라이언트 코드만 들어있으며, LFB와 Klaytn는 각각 로컬 환경에서 구성하여야 함. 각각 블록체인 구성에 대한 참고자료는 아래와 같음.
+   
+   - [Cosmos](https://github.com/cosmos/cosmos-sdk)
+   - [Klaytn](https://github.com/klaytn/klaytn)
+   - [LFB](https://github.com/line/lfb)
+</p>
+
+- ㅇㅇ
+   -
 
 ## CBDC_admin
 
-은행 관리 시나리오 데모
+은행 관리 시나리오 데모 프로그램 
 
+- 시중 은행 페이지
+   - Distribution.js 파일
+   - 시중 은행 CBDC 배정 및 확인 페이지
+   - CBDC 잔액 조회 페이지 
+- 중앙 은행 페이지
+   - Home.js 
+   - 중앙 은행 CBDC 발행 및 배정 기능
+   
 ## CBDC_user
 
 유저 서비스 데모, 현재 크롬창 최적화 사이즈: `516 * 992`(viewport)
@@ -66,7 +85,9 @@ CBDC 코스모스 블록체인
 
 # 실행 방법
 
-## shell 1 서버 실행
+## shell 1 - 서버 실행
+
+디폴트 포트 설정은 다음과 같다.
 
 Admin port : 3001 
 
@@ -77,7 +98,7 @@ Receiver port: 3002
 Server port : 3030
 
 
-## shell 2 Cosmos 블록체인 실행
+## shell 2 - 블록체인 실행
 
 ```
 starport serve
@@ -85,7 +106,7 @@ starport serve
 
 만약 블록이 생성 되지 않는 다면 다른 shell에서 아래와 같은 명령어 실행 시 블록이 생성됨 (에러 메시지가 Trigger 역할을 하는 듯함..)
 
-dpnm은 cosmos-SDK chain 생성 시 초기 세팅한 이름임. 자유롭게  
+dpnm은 cosmos-SDK chain 생성 시 초기 세팅한 이름임. 자유롭게 변경가능함
 
 ```
 dpnmd start
